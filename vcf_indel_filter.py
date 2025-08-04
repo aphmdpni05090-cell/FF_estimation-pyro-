@@ -9,7 +9,7 @@ input_vcf_path = input('Enter the input VCF path:')
 vcf_in = pysam.VariantFile(input_vcf_path,"r")
 
 # Prepare output VCF writer
-output_vcf_file = "filtered_Cardiorun30.vcf.gz"
+output_vcf_file = "filtered_output.vcf.gz"
 vcf_out = pysam.VariantFile(output_vcf_file, "wz", header=vcf_in.header)
 
 # Step 1: Build dictionary of positions and associated (REF, ALT)
@@ -40,3 +40,4 @@ for record in vcf_in.fetch():
 # Cleanup
 vcf_in.close()
 vcf_out.close()
+
