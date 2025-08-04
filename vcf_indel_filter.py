@@ -28,7 +28,7 @@ for (chrom, pos), alleles in variants_by_pos.items():
 
 # Save removed positions to file
 df = pd.DataFrame(list(positions_to_filter), columns=["CHROM", "POS"])
-df.to_csv("Cardiorun36/removed_pos.txt", sep='\t', index=False)
+df.to_csv("vcf/removed_pos.txt", sep='\t', index=False)
 
 # Step 3: Rewind and write filtered records
 vcf_in = pysam.VariantFile(input_vcf_path, "r")  # Reopen for fresh iterator
@@ -40,4 +40,5 @@ for record in vcf_in.fetch():
 # Cleanup
 vcf_in.close()
 vcf_out.close()
+
 
