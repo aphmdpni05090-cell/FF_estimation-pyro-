@@ -84,3 +84,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     analyze_insert_sizes(args.vcf, args.bam, args.out)
+
+#use this command for cleaning null values on Bash: awk 'NR==1 || !/NA(\t|$)/' insert_size_ranksum.tsv > insert_size_ranksum.cleaned.tsv
