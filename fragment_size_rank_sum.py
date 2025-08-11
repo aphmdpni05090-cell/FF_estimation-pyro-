@@ -75,6 +75,7 @@ def analyze_insert_sizes(vcf_path, bam_path, output_path):
     df = pd.DataFrame(results)
     df.to_csv(output_path, sep="\t", index=False)
     print(f"✅ Output written to: {output_path}")
+    print("this command for cleaning null values on Bash: awk 'NR==1 || !/NA(\t|$)/' insert_size_ranksum.tsv > insert_size_ranksum.cleaned.tsv")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Insert size Z-score analysis on consensus reads (VCF + BAM).")
@@ -85,4 +86,4 @@ if __name__ == "__main__":
 
     analyze_insert_sizes(args.vcf, args.bam, args.out)
 
-#use this command for cleaning null values on Bash: awk 'NR==1 || !/NA(\t|$)/' insert_size_ranksum.tsv > insert_size_ranksum.cleaned.tsv
+
