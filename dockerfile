@@ -62,7 +62,8 @@ RUN conda install --no-channel-priority --override-channels --insecure -n base -
 	collections \
 	pyro-ppl \
 	pytorch \
-	
+	samtools \
+    bcftools \
     jupyter \
     && conda clean --all -y || true
 
@@ -84,4 +85,5 @@ RUN pip install --no-cache-dir \
     -r requirements.txt
 RUN pip install --no-cache-dir vcfpy
     
+
 
