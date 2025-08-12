@@ -66,13 +66,14 @@ def analyze_insert_sizes(vcf_path, bam_path, output_path):
                 "Pos": pos,
                 "Ref": ref,
                 "Alt": alt,
-                "Z_score": z if z is not None else "NA",
+                "Z_score": z if z is not None else np.nan,
                 "N_ref": len(ref_sizes),
                 "N_alt": len(alt_sizes)
             })
             
       
     df = pd.DataFrame(results)
+    df.dropna()
     df.to_csv(output_path, sep="\t", index=False)
     print(f"✅ Output written to: {output_path}")
 
@@ -84,3 +85,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     analyze_insert_sizes(args.vcf, args.bam, args.out)
+
