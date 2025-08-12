@@ -45,18 +45,13 @@ RUN conda create -n bioinfo_env python=3.10 -y
 
 
 
-# Installer Snakemake et Ensembl-VEP via Conda
+# Installer tous les packages  via Conda
 RUN conda install --no-channel-priority --override-channels --insecure -n base -c conda-forge  \
     pandas \
     numpy \
     scipy \
     argparse\
 	pysam \
-    && conda clean --all -y || true
-
-
-# Installer Snakemake et Ensembl-VEP via Conda
-RUN conda install --no-channel-priority --override-channels --insecure -n base -c conda-forge  \
     scikit-learn \
 	math \
 	collections \
@@ -64,26 +59,14 @@ RUN conda install --no-channel-priority --override-channels --insecure -n base -
 	pytorch \
 	samtools \
     bcftools \
-    jupyter \
     && conda clean --all -y || true
 
 
 
 
 
-# Installer les plugins de VEP avec le bon `curl`
-#RUN mkdir -p /workspace/vep_data \
-#    && conda run -n base vep_install --AUTO a --SPECIES homo_sapiens --ASSEMBLY GRCh38 --CACHEDIR /workspace/vep_data
-#RUN mkdir -p /workspace/vep_data \
-#    && bash -c "source /opt/conda/bin/activate base && vep_install --AUTO a --SPECIES homo_sapiens --ASSEMBLY GRCh38 --CACHEDIR /workspace/vep_data --curl /usr/bin/curl" || true
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir \
-    --trusted-host pypi.org \
-    --trusted-host pypi.python.org \
-    --trusted-host files.pythonhosted.org \
-    -r requirements.txt
-RUN pip install --no-cache-dir vcfpy
-    
+
+
 
 
