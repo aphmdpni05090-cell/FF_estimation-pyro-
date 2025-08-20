@@ -1,0 +1,35 @@
+/mnt/B/08_Biologie_Materno_Foetale/Illumina/Run0.v3#
+
+#toujours commencer par python/scripts pour les fichiers python
+
+#indel filter vcf_indel_filter.py
+in:UDP0002_UMI_7_7/UDP0002_UMI_7_7.hard-filtered.vcf.gz
+out:UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_indel.vcf.gz
+
+#annotate 
+gunzip -c UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_indel.vcf.gz  >UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_indel.vcf
+scripts/annovar/table_annovar.pl UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_indel.vcf   scripts/annovar/humandb/   -buildver hg38   -out scripts/annovar/proband.annovar   -remove   -protocol refGeneWithVer,gnomad211_exome   -operation g,f   -arg '-hgvs',   -polish -nastring .   -vcfinput   -intronhgvs 100
+
+
+bcftools query -H -f'%CHROM\t%POS\t%REF\t%ALT\t%SOR\t%MQ\t%MQRankSum\t%ReadPosRankSum\t%DP\n' UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_indel.vcf.gz > UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_indel.tsv
+
+#random forest random_forest2.py
+in:UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_indel.tsv
+out:UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_scored_rd.vcf.gz
+
+#insertsize_rank_sumtest insert_size_rank_sum.py
+gunzip -c UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_scored_rd.vcf.gz  > UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_scored_rd.vcf
+in:python scripts/insert_size_rank_sum.py --vcf UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_scored_rd.vcf --bam UDP0002_UMI_7_7/UDP0002_UMI_7_7.bam --out UDP0002_UMI_7_7/UDP0002_process/UDP0002_ranked.tsv
+
+#vaf python scripts/datawithvaf.py
+in:UDP0002_UMI_7_7/UDP0002_process/UDP0002_UMI_7_7.hard-filtered_indel.vcf.gz
+out:UDP0002_UMI_7_7/UDP0002_process/UDP0002_vaf.csv
+
+# python scripts/Deep_datapreprocess.py
+in:UDP0002_UMI_7_7/UDP0002_process/UDP0002_vaf.csv
+in:UDP0002_UMI_7_7/UDP0002_process/UDP0002_ranked.tsv
+out:UDP0002_UMI_7_7/UDP0002_process/UDP0002_preprocess.csv
+
+#ML_fetal
+python scripts/ML_fetal.py -i UDP0002_UMI_7_7/UDP0002_process/UDP0002_preprocess.csv -o UDP0002_UMI_7_7/UDP0002_process/UDP0001_UMI_7_7_genotyped.csv --nsteps 2000 --seed 42
+ 
